@@ -4,26 +4,26 @@ KMERSIZE=31 # RD:61
 
 #modified from NIKS script
 
-dir=/home/laptop/Desktop/HAWK/ecoli_analysis/test_dir		#directory for read files 
-hawkDir=/home/laptop/Desktop/HAWK			#directory where hawk is installed
-jellyfish2Dir=/home/laptop/Desktop/HAWK/supplements/jellyfish-2.2.10/build/bin
-sortDir=/home/atif/old_home/old_home/coreutils/deps/bin		#directory where parallel sort is installed
+dir=${PWD}/data									#directory for read files 
+hawkDir=${PWD}								#directory where hawk is installed
+jellyfish2Dir=${PWD}/supplements/jellyfish-2.2.10/bin
 
 cd ${dir}
 
 for file in `ls -d Reads*`
 do
+    echo $file
 	OUTPREFIX=$file
 	
-	cd ${file}
-
-	mkdir ${OUTPREFIX}_kmers
+	cd ${dir}/${file}
+	rm -rf ${OUTPREFIX}_kmers
+	mkdir -p ${OUTPREFIX}_kmers
 
 	# cmd based on if read file exists as fastq or fastq.gz
 	if [ -f *.fastq ]; then
-    	${jellyfish2Dir}/jellyfish count -C -o ${OUTPREFIX}_kmers/tmp -m ${KMERSIZE} -t ${CORES} -s $MEM *.fastq
+    	${jellyfish2Dir}/jellyfish h-C -o ${OUTPREFIX}_kmers/tmp -m ${KMERSIZE} -t ${CORES} -s $MEM *.fastq
 	else
-		${jellyfish2Dir}/jellyfish count -C -o ${OUTPREFIX}_kmers/tmp -m ${KMERSIZE} -t ${CORES} -s $MEM <( zcat *.fastq.gz )
+		${jellyfish2Dir}/jellyfish count -C -o ${OUTPREFIX}_kmers/tmp -m ${KMERSIZE} -t ${CORES} -s $MEM <( gzcat *.fastq.gz )
 	fi
 	timecount=$((timecount+t2-t1))
 
