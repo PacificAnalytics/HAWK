@@ -1,3 +1,6 @@
+https://elifesciences.org/articles/32920
+
+
 # HAWK 1.5.0
 
 Hitting associations with k-mers
